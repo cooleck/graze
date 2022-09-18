@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
+	"github.com/rs/cors"
 	"go.uber.org/zap"
 )
 
@@ -20,36 +21,34 @@ func (a *App) initGateway(cfg *Config) {
 		}
 	}
 
-	//var builder strings.Builder
-	//builder.WriteString("http://")
-	//builder.WriteString(toolsAddr)
-	//
-	//c := cors.New(cors.Options{
-	//	AllowedOrigins: []string{
-	//		builder.String(),
-	//	},
-	//	AllowedMethods: []string{
-	//		http.MethodGet,
-	//		http.MethodPost,
-	//		http.MethodPut,
-	//		http.MethodDelete,
-	//		http.MethodOptions,
-	//	},
-	//	AllowedHeaders: []string{
-	//		"Content-Type",
-	//		"Content-Length",
-	//		"Accept-Encoding",
-	//		"ResponseType",
-	//		"api_key",
-	//		"Authorization",
-	//	},
-	//})
-	//
-	//handler := c.Handler(mux)
+	toolsOrigin := fmt.Sprintf("http://localhost:%d", cfg.ToolsPort)
+
+	c := cors.New(cors.Options{
+		AllowedOrigins: []string{
+			toolsOrigin,
+		},
+		AllowedMethods: []string{
+			http.MethodGet,
+			http.MethodPost,
+			http.MethodPut,
+			http.MethodDelete,
+			http.MethodOptions,
+		},
+		AllowedHeaders: []string{
+			"Content-Type",
+			"Content-Length",
+			"Accept-Encoding",
+			"ResponseType",
+			"api_key",
+			"Authorization",
+		},
+	})
+
+	handler := c.Handler(mux)
 
 	httpServer := &http.Server{
 		Addr:    fmt.Sprintf(":%d", cfg.GatewayPort),
-		Handler: mux,
+		Handler: handler,
 	}
 
 	a.gatewayServer = httpServer

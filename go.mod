@@ -7,6 +7,7 @@ require (
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.8.0
 	github.com/peterbourgon/mergemap v0.0.1
 	github.com/rakyll/statik v0.1.7
+	github.com/rs/cors v1.8.2
 	go.uber.org/zap v1.23.0
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c
 	google.golang.org/grpc v1.46.2
